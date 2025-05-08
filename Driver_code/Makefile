@@ -1,4 +1,4 @@
-obj-m += ads1115_Driver.o
+obj-m += mpu6050_ioctl.o
 KDIR = /lib/modules/$(shell uname -r)/build
 
 all:

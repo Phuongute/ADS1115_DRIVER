@@ -1,0 +1,1 @@
+cmd_/home/pi/Documents/ads/HTN/Driver_code/modules.order := {   echo /home/pi/Documents/ads/HTN/Driver_code/mpu6050_ioctl.ko; :; } | awk '!x[$$0]++' - > /home/pi/Documents/ads/HTN/Driver_code/modules.order
