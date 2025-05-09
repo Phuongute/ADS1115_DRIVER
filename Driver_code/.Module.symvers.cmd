@@ -1,1 +1,0 @@
-cmd_/home/pi/Documents/ads/HTN/Driver_code/Module.symvers := sed 's/ko$$/o/' /home/pi/Documents/ads/HTN/Driver_code/modules.order | scripts/mod/modpost -m -a   -o /home/pi/Documents/ads/HTN/Driver_code/Module.symvers -e -i Module.symvers   -T -

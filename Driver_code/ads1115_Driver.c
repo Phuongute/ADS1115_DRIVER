@@ -1,4 +1,4 @@
-#https://www.kernel.org/doc/html/v4.14/driver-api/i2c.html
+//#https://www.kernel.org/doc/html/v4.14/driver-api/i2c.html
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/i2c.h>

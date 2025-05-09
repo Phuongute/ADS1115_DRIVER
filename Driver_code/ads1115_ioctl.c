@@ -4,7 +4,6 @@
 #include <linux/device.h>
 #include <linux/fs.h>
 #include <linux/uaccess.h>
-#include <linux/delay.h>
 
 #define DRIVER_NAME "mpu6050_driver"
 #define CLASS_NAME "mpu6050"
@@ -15,14 +14,14 @@
 
 // IOCTL commands
 #define MPU6050_IOCTL_MAGIC 'm'
-#define MPU6050_IOCTL_READ_X _IOR(MPU6050_IOCTL_MAGIC, 1, int)  
-#define MPU6050_IOCTL_READ_Y _IOR(MPU6050_IOCTL_MAGIC, 2, int) 
-#define MPU6050_IOCTL_READ_Z _IOR(MPU6050_IOCTL_MAGIC, 3, int) 
+#define MPU6050_IOCTL_READ_X _IOR(MPU6050_IOCTL_MAGIC, 1, int)
+#define MPU6050_IOCTL_READ_Y _IOR(MPU6050_IOCTL_MAGIC, 2, int)
+#define MPU6050_IOCTL_READ_Z _IOR(MPU6050_IOCTL_MAGIC, 3, int)
 
-static struct   i2c_client *mpu6050_client;
-static struct   class* mpu6050_class = NULL;
-static struct   device* mpu6050_device = NULL;
-static int      major_number;
+static struct i2c_client *mpu6050_client;
+static struct class* mpu6050_class = NULL;
+static struct device* mpu6050_device = NULL;
+static int major_number;
 
 static int mpu6050_read_axis(struct i2c_client *client, int axis)
 {
@@ -67,7 +66,6 @@ static long mpu6050_ioctl(struct file *file, unsigned int cmd, unsigned long arg
     return 0;
 }
 
-
 static int mpu6050_open(struct inode *inodep, struct file *filep)
 {
     printk(KERN_INFO "MPU6050 device opened\n");
@@ -88,7 +86,6 @@ static struct file_operations fops = {
 
 static int mpu6050_probe(struct i2c_client *client, const struct i2c_device_id *id)
 {
-    printk(KERN_INFO "IOT\n");
     mpu6050_client = client;
 
     // Create a char device
@@ -111,13 +108,13 @@ static int mpu6050_probe(struct i2c_client *client, const struct i2c_device_id *
         unregister_chrdev(major_number, DEVICE_NAME);
         printk(KERN_ERR "Failed to create the device\n");
         return PTR_ERR(mpu6050_device);
-    } // /dev/mpu6050 
+    }
 
     printk(KERN_INFO "MPU6050 driver installed\n");
     return 0;
 }
 
-static int mpu6050_remove(struct i2c_client *client)
+static void mpu6050_remove(struct i2c_client *client)
 {
     device_destroy(mpu6050_class, MKDEV(major_number, 0));
     class_unregister(mpu6050_class);
@@ -125,12 +122,10 @@ static int mpu6050_remove(struct i2c_client *client)
     unregister_chrdev(major_number, DEVICE_NAME);
 
     printk(KERN_INFO "MPU6050 driver removed\n");
-    return 0; // ✅ trả về 0 để báo remove thành công
 }
 
-
 static const struct of_device_id mpu6050_of_match[] = {
-    { .compatible = "ti,ads1115", },
+    { .compatible = "TI,ads1115", },
     { },
 };
 MODULE_DEVICE_TABLE(of, mpu6050_of_match);
