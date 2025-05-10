@@ -59,19 +59,23 @@ static int ads1115_set_hiThresh(struct i2c_client *client,u16 hiThresh){
     }
     return 0;
 }
-static int ads1115_read_adc(struct i2c_client *client)
+static int ads1115_read_adc(struct i2c_client *client, int __user *user_data)
 {
     int ret;
     int adcVal;
-    ret = i2c_smbus_read_word_data(client,ADS_REG_CONV);
+
+    ret = i2c_smbus_read_word_data(client, ADS_REG_CONV);
     if (ret < 0) {
         printk("ADS1115: Failed to read ADC value: %d\n", ret);
         return ret;
     }
-    adcVal = be16_to_cpu(ret);
-    if (copy_to_user(user_data, &adcVal, sizeof(adcVal))) { 
+
+    adcVal = be16_to_cpu(ret); // Chuyển đổi endian
+
+    if (copy_to_user(user_data, &adcVal, sizeof(adcVal))) {
         return -EFAULT;
     }
+
     return 0;
 }
 static long ads1115_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
@@ -82,13 +86,13 @@ static long ads1115_ioctl(struct file *file, unsigned int cmd, unsigned long arg
     }
     switch (cmd) {
         case ADS1115_IOCTL_CONFIG:
-            return ads1115_set_config(ads1115_driver,(u16)data);
+            return ads1115_set_config(ads1115_client,(u16)data);
         case ADS1115_IOCTL_SET_LOTHRESH:
-            return ads1115_set_loThresh(ads1115_driver,(u16)data);
+            return ads1115_set_loThresh(ads1115_client,(u16)data);
         case ADS1115_IOCTL_SET_HITHRESH:
-            return ads1115_set_hiThresh(ads1115_driver,(u16)data);
+            return ads1115_set_hiThresh(ads1115_client,(u16)data);
         case ADS1115_IOCTL_READ_ADC:
-            return ads1115_read_adc(ads1115_driver);
+            return ads1115_read_adc(ads1115_client, (int __user *)arg);
         default:
             return -EINVAL;
     }
@@ -143,7 +147,7 @@ static int ads1115_probe(struct i2c_client *client, const struct i2c_device_id *
     return 0;
 }
 
-static void ads1115_remove(struct i2c_client *client)
+static int ads1115_remove(struct i2c_client *client)
 {
     device_destroy(ads1115_class, MKDEV(major_number, 0));
     class_unregister(ads1115_class);
@@ -151,6 +155,7 @@ static void ads1115_remove(struct i2c_client *client)
     unregister_chrdev(major_number, DEVICE_NAME);
 
     printk(KERN_INFO "ads1115 driver removed\n");
+    return 0;
 }
 
 static const struct of_device_id ads1115_of_match[] = {
