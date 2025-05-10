@@ -4,89 +4,118 @@
 #include <linux/device.h>
 #include <linux/fs.h>
 #include <linux/uaccess.h>
+#include <linux/types.h>
 
-#define DRIVER_NAME "mpu6050_driver"
-#define CLASS_NAME "mpu6050"
-#define DEVICE_NAME "mpu6050"
+#define DRIVER_NAME "ads1115_driver"
+#define CLASS_NAME "ads1115"
+#define DEVICE_NAME "ads1115"
 
-#define MPU6050_REG_ACCEL_XOUT_H 0x3B
-#define MPU6050_REG_PWR_MGMT_1 0x6B
+
+#define ADS1115_ADR 0x48    //ADDR nối với Ground
+#define ADS_REG_CONV 0x00
+#define ADS_REG_CONFIG 0x01
+#define ADS_REG_LO_THRESH 0x02
+#define ADS_REG_HI_THRESH 0x03
 
 // IOCTL commands
-#define MPU6050_IOCTL_MAGIC 'm'
-#define MPU6050_IOCTL_READ_X _IOR(MPU6050_IOCTL_MAGIC, 1, int)
-#define MPU6050_IOCTL_READ_Y _IOR(MPU6050_IOCTL_MAGIC, 2, int)
-#define MPU6050_IOCTL_READ_Z _IOR(MPU6050_IOCTL_MAGIC, 3, int)
+#define ADS1115_IOCTL_MAGIC 'a'
 
-static struct i2c_client *mpu6050_client;
-static struct class* mpu6050_class = NULL;
-static struct device* mpu6050_device = NULL;
+#define ADS1115_IOCTL_CONFIG _IOW(ADS1115_IOCTL_MAGIC, 1, int)
+#define ADS1115_IOCTL_SET_LOTHRESH _IOW(ADS1115_IOCTL_MAGIC, 2, int)
+#define ADS1115_IOCTL_SET_HITHRESH _IOW(ADS1115_IOCTL_MAGIC, 3, int)
+#define ADS1115_IOCTL_READ_ADC _IOR(ADS1115_IOCTL_MAGIC, 4, int)
+
+
+static struct i2c_client *ads1115_client;
+static struct class* ads1115_class = NULL;
+static struct device* ads1115_device = NULL;
 static int major_number;
 
-static int mpu6050_read_axis(struct i2c_client *client, int axis)
+static int ads1115_set_config(struct i2c_client *client,u16 config)
 {
-    u8 buf[6];
-    s16 accel_data[3];
-
-    if (i2c_smbus_read_i2c_block_data(client, MPU6050_REG_ACCEL_XOUT_H, sizeof(buf), buf) < 0) {
-        printk(KERN_ERR "Failed to read accelerometer data\n");
-        return -EIO;
+    int ret;
+    ret = i2c_smbus_write_word_data(client, ADS_REG_CONFIG, cpu_to_be16(config));
+    if (ret < 0) {
+        printk("ADS1115: Failed to set config: %d\n", ret);
+        return ret;
     }
-
-    // Combine high and low bytes to form 16-bit values
-    accel_data[0] = (buf[0] << 8) | buf[1]; // X axis
-    accel_data[1] = (buf[2] << 8) | buf[3]; // Y axis
-    accel_data[2] = (buf[4] << 8) | buf[5]; // Z axis
-
-    return accel_data[axis];
+    return 0;
 }
-
-static long mpu6050_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+static int ads1115_set_loThresh(struct i2c_client *client,u16 loThresh){
+    int ret;
+    ret = i2c_smbus_write_word_data(client,ADS_REG_LO_THRESH,cpu_to_be16(loThresh));
+    if (ret < 0) {
+        printk("ADS1115: Failed to set low thresh: %d\n", ret);
+        return ret;
+    }
+    return 0;
+}
+static int ads1115_set_hiThresh(struct i2c_client *client,u16 hiThresh){
+    int ret;
+    ret = i2c_smbus_write_word_data(client,ADS_REG_HI_THRESH,cpu_to_be16(hiThresh));
+    if (ret < 0) {
+        printk("ADS1115: Failed to set hi thresh: %d\n", ret);
+        return ret;
+    }
+    return 0;
+}
+static int ads1115_read_adc(struct i2c_client *client)
+{
+    int ret;
+    int adcVal;
+    ret = i2c_smbus_read_word_data(client,ADS_REG_CONV);
+    if (ret < 0) {
+        printk("ADS1115: Failed to read ADC value: %d\n", ret);
+        return ret;
+    }
+    adcVal = be16_to_cpu(ret);
+    if (copy_to_user(user_data, &adcVal, sizeof(adcVal))) { 
+        return -EFAULT;
+    }
+    return 0;
+}
+static long ads1115_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
     int data;
-
+    if (copy_from_user(&data, (int __user *)arg, sizeof(data))) {
+        return -EFAULT;
+    }
     switch (cmd) {
-        case MPU6050_IOCTL_READ_X:
-            data = mpu6050_read_axis(mpu6050_client, 0);
-            break;
-        case MPU6050_IOCTL_READ_Y:
-            data = mpu6050_read_axis(mpu6050_client, 1);
-            break;
-        case MPU6050_IOCTL_READ_Z:
-            data = mpu6050_read_axis(mpu6050_client, 2);
-            break;
+        case ADS1115_IOCTL_CONFIG:
+            return ads1115_set_config(ads1115_driver,(u16)data);
+        case ADS1115_IOCTL_SET_LOTHRESH:
+            return ads1115_set_loThresh(ads1115_driver,(u16)data);
+        case ADS1115_IOCTL_SET_HITHRESH:
+            return ads1115_set_hiThresh(ads1115_driver,(u16)data);
+        case ADS1115_IOCTL_READ_ADC:
+            return ads1115_read_adc(ads1115_driver);
         default:
             return -EINVAL;
     }
-
-    if (copy_to_user((int __user *)arg, &data, sizeof(data))) {
-        return -EFAULT;
-    }
-
     return 0;
 }
 
-static int mpu6050_open(struct inode *inodep, struct file *filep)
+static int ads1115_open(struct inode *inodep, struct file *filep)
 {
-    printk(KERN_INFO "MPU6050 device opened\n");
+    printk(KERN_INFO "ads1115 device opened\n");
     return 0;
 }
 
-static int mpu6050_release(struct inode *inodep, struct file *filep)
+static int ads1115_release(struct inode *inodep, struct file *filep)
 {
-    printk(KERN_INFO "MPU6050 device closed\n");
+    printk(KERN_INFO "ads1115 device closed\n");
     return 0;
 }
 
 static struct file_operations fops = {
-    .open = mpu6050_open,
-    .unlocked_ioctl = mpu6050_ioctl,
-    .release = mpu6050_release,
+    .open = ads1115_open,
+    .unlocked_ioctl = ads1115_ioctl,
+    .release = ads1115_release,
 };
 
-static int mpu6050_probe(struct i2c_client *client, const struct i2c_device_id *id)
+static int ads1115_probe(struct i2c_client *client, const struct i2c_device_id *id)
 {
-    mpu6050_client = client;
+    ads1115_client = client;
 
     // Create a char device
     major_number = register_chrdev(0, DEVICE_NAME, &fops);
@@ -95,66 +124,66 @@ static int mpu6050_probe(struct i2c_client *client, const struct i2c_device_id *
         return major_number;
     }
 
-    mpu6050_class = class_create(THIS_MODULE, CLASS_NAME);
-    if (IS_ERR(mpu6050_class)) {
+    ads1115_class = class_create(THIS_MODULE, CLASS_NAME);
+    if (IS_ERR(ads1115_class)) {
         unregister_chrdev(major_number, DEVICE_NAME);
         printk(KERN_ERR "Failed to register device class\n");
-        return PTR_ERR(mpu6050_class);
+        return PTR_ERR(ads1115_class);
     }
 
-    mpu6050_device = device_create(mpu6050_class, NULL, MKDEV(major_number, 0), NULL, DEVICE_NAME);
-    if (IS_ERR(mpu6050_device)) {
-        class_destroy(mpu6050_class);
+    ads1115_device = device_create(ads1115_class, NULL, MKDEV(major_number, 0), NULL, DEVICE_NAME);
+    if (IS_ERR(ads1115_device)) {
+        class_destroy(ads1115_class);
         unregister_chrdev(major_number, DEVICE_NAME);
         printk(KERN_ERR "Failed to create the device\n");
-        return PTR_ERR(mpu6050_device);
+        return PTR_ERR(ads1115_device);
     }
 
-    printk(KERN_INFO "MPU6050 driver installed\n");
+    printk(KERN_INFO "ads1115 driver installed\n");
     return 0;
 }
 
-static void mpu6050_remove(struct i2c_client *client)
+static void ads1115_remove(struct i2c_client *client)
 {
-    device_destroy(mpu6050_class, MKDEV(major_number, 0));
-    class_unregister(mpu6050_class);
-    class_destroy(mpu6050_class);
+    device_destroy(ads1115_class, MKDEV(major_number, 0));
+    class_unregister(ads1115_class);
+    class_destroy(ads1115_class);
     unregister_chrdev(major_number, DEVICE_NAME);
 
-    printk(KERN_INFO "MPU6050 driver removed\n");
+    printk(KERN_INFO "ads1115 driver removed\n");
 }
 
-static const struct of_device_id mpu6050_of_match[] = {
+static const struct of_device_id ads1115_of_match[] = {
     { .compatible = "TI,ads1115", },
     { },
 };
-MODULE_DEVICE_TABLE(of, mpu6050_of_match);
+MODULE_DEVICE_TABLE(of, ads1115_of_match);
 
-static struct i2c_driver mpu6050_driver = {
+static struct i2c_driver ads1115_driver = {
     .driver = {
         .name   = DRIVER_NAME,
         .owner  = THIS_MODULE,
-        .of_match_table = of_match_ptr(mpu6050_of_match),
+        .of_match_table = of_match_ptr(ads1115_of_match),
     },
-    .probe      = mpu6050_probe,
-    .remove     = mpu6050_remove,
+    .probe      = ads1115_probe,
+    .remove     = ads1115_remove,
 };
 
-static int __init mpu6050_init(void)
+static int __init ads1115_init(void)
 {
-    printk(KERN_INFO "Initializing MPU6050 driver\n");
-    return i2c_add_driver(&mpu6050_driver);
+    printk(KERN_INFO "Initializing ads1115 driver\n");
+    return i2c_add_driver(&ads1115_driver);
 }
 
-static void __exit mpu6050_exit(void)
+static void __exit ads1115_exit(void)
 {
-    printk(KERN_INFO "Exiting MPU6050 driver\n");
-    i2c_del_driver(&mpu6050_driver);
+    printk(KERN_INFO "Exiting ads1115 driver\n");
+    i2c_del_driver(&ads1115_driver);
 }
 
-module_init(mpu6050_init);
-module_exit(mpu6050_exit);
+module_init(ads1115_init);
+module_exit(ads1115_exit);
 
 MODULE_AUTHOR("Your Name");
-MODULE_DESCRIPTION("MPU6050 I2C Client Driver with IOCTL Interface");
+MODULE_DESCRIPTION("ads1115 I2C Client Driver with IOCTL Interface");
 MODULE_LICENSE("GPL");
