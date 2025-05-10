@@ -69,11 +69,9 @@ static int ads1115_read_adc(struct i2c_client *client)
         return ret;
     }
     adcVal = be16_to_cpu(ret);
-    if (copy_to_user(user_data, &adcVal, sizeof(adcVal))) { 
-        return -EFAULT;
-    }
-    return 0;
+    return adcVal;
 }
+
 static long ads1115_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
     int data;
@@ -82,13 +80,28 @@ static long ads1115_ioctl(struct file *file, unsigned int cmd, unsigned long arg
     }
     switch (cmd) {
         case ADS1115_IOCTL_CONFIG:
-            return ads1115_set_config(ads1115_driver,(u16)data);
+        if (copy_from_user(&data, (int __user *)arg, sizeof(data))) {
+            return -EFAULT;
+        }
+        return ads1115_set_config(ads1115_client,(u16)data);
+        break;
         case ADS1115_IOCTL_SET_LOTHRESH:
-            return ads1115_set_loThresh(ads1115_driver,(u16)data);
+        if (copy_from_user(&data, (int __user *)arg, sizeof(data))) {
+            return -EFAULT;
+        }
+        return ads1115_set_loThresh(ads1115_client,(u16)data);
+        break;
         case ADS1115_IOCTL_SET_HITHRESH:
-            return ads1115_set_hiThresh(ads1115_driver,(u16)data);
+        if (copy_from_user(&data, (int __user *)arg, sizeof(data))) {
+            return -EFAULT;
+        }
+        return ads1115_set_hiThresh(ads1115_client,(u16)data);
+        break;
         case ADS1115_IOCTL_READ_ADC:
-            return ads1115_read_adc(ads1115_driver);
+            data = ads1115_read_adc(ads1115_client);
+            if (copy_to_user((int __user *)arg, &data, sizeof(data)))
+                return -EFAULT;
+        break;
         default:
             return -EINVAL;
     }
