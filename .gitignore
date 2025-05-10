@@ -1,8 +1,8 @@
 # Bo qua cac file build kernel/module
-*.o
-*.ko
-*.cmd
-*.mod.*
-*.order
-*.symvers
-**/run
+Driver_code/*.o
+Driver_code/*.ko
+Driver_code/*.cmd
+Driver_code/*.mod.*
+Driver_code/*.order
+Driver_code/*.symvers
+Driver_code/run

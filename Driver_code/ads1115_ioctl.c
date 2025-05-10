@@ -63,7 +63,8 @@ static int ads1115_read_adc(struct i2c_client *client)
 {
     int ret;
     int adcVal;
-    ret = i2c_smbus_read_word_data(client,ADS_REG_CONV);
+
+    ret = i2c_smbus_read_word_data(client, ADS_REG_CONV);
     if (ret < 0) {
         printk("ADS1115: Failed to read ADC value: %d\n", ret);
         return ret;
@@ -75,9 +76,6 @@ static int ads1115_read_adc(struct i2c_client *client)
 static long ads1115_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
     int data;
-    if (copy_from_user(&data, (int __user *)arg, sizeof(data))) {
-        return -EFAULT;
-    }
     switch (cmd) {
         case ADS1115_IOCTL_CONFIG:
         if (copy_from_user(&data, (int __user *)arg, sizeof(data))) {
