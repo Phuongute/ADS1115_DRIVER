@@ -1,8 +1,1 @@
-# Bo qua cac file build kernel/module
-*.o
-*.ko
-*.cmd
-*.mod.*
-*.order
-*.symvers
-**/run
+
