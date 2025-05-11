@@ -5,6 +5,7 @@
 #include <linux/fs.h>
 #include <linux/uaccess.h>
 #include <linux/types.h>
+#include <linux/delay.h>
 
 #define DRIVER_NAME "ads1115_driver"
 #define CLASS_NAME "ads1115"
@@ -59,6 +60,13 @@ static int ads1115_set_loThresh(struct i2c_client *client,u16 loThresh){
         printk("ADS1115: Failed to set low thresh: %d\n", ret);
         return ret;
     }
+    ndelay(30000);
+    ret = i2c_smbus_read_word_data(client, ADS_REG_LO_THRESH);
+    if (ret < 0) {
+        printk("ADS1115: Failed to read ADC value: %d\n", ret);
+        return ret;
+    }
+    printk("ret: %d\n", ret);
     return 0;
 }
 static int ads1115_set_hiThresh(struct i2c_client *client,u16 hiThresh){
@@ -68,6 +76,7 @@ static int ads1115_set_hiThresh(struct i2c_client *client,u16 hiThresh){
         printk("ADS1115: Failed to set hi thresh: %d\n", ret);
         return ret;
     }
+
     return 0;
 }
 static int ads1115_read_adc(struct i2c_client *client)
@@ -81,11 +90,12 @@ static int ads1115_read_adc(struct i2c_client *client)
     }
     return be16_to_cpu(ret);
 }
-int ads1115_set_channel(struct i2c_client *client, u8 channel)
+int ads1115_set_channel(struct i2c_client *client, u16 channel)
 {
     int ret;
     u16 config;
     // đọc lại config
+    printk("doc config truoc\n");
     ret = i2c_smbus_read_word_data(client, ADS_REG_CONFIG);
     if (ret < 0)
         return ret;
@@ -98,7 +108,7 @@ int ads1115_set_channel(struct i2c_client *client, u8 channel)
 
     // Bắt đầu chuyển đổi
     config |= (1 << 15); 
-
+    printk("set channel: %d\n", config);
     return i2c_smbus_write_word_data(client, ADS_REG_CONFIG, cpu_to_be16(config));
 }
 static long ads1115_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
@@ -127,6 +137,7 @@ static long ads1115_ioctl(struct file *file, unsigned int cmd, unsigned long arg
         break;
 
         case ADS1115_IOCTL_SET_CHANNEL:
+        printk("dang set\n");
         if (copy_from_user(&data, (int __user *)arg, sizeof(data))) {
             return -EFAULT;
         }
@@ -192,7 +203,7 @@ static int ads1115_probe(struct i2c_client *client, const struct i2c_device_id *
     return 0;
 }
 
-static void ads1115_remove(struct i2c_client *client)
+static int ads1115_remove(struct i2c_client *client)
 {
     device_destroy(ads1115_class, MKDEV(major_number, 0));
     class_unregister(ads1115_class);
@@ -200,6 +211,7 @@ static void ads1115_remove(struct i2c_client *client)
     unregister_chrdev(major_number, DEVICE_NAME);
 
     printk(KERN_INFO "ads1115 driver removed\n");
+    return 0;
 }
 
 static const struct of_device_id ads1115_of_match[] = {
