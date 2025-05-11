@@ -1,9 +1,9 @@
 # DRIVER ADS1115
 Driver này cung cấp giao tiếp với ADS1115, một bộ chuyển đổi ADC 16-bit 4 kênh từ Texas Instruments, thông qua I2C interface trên nền tảng Linux.
 Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để người dùng tương tác thông qua các lệnh ioctl() cho cấu hình, chọn kênh ADC, đọc giá trị, và thiết lập ngưỡng cảnh báo.
-## Yêu cầu hệ thống
+## 1.Yêu cầu hệ thống
 
-## Thông số kỹ thuật (Specifications)
+## 2.Thông số kỹ thuật (Specifications)
 
 - **Độ phân giải:** 16-bit (±32768 mức)
 - **Số kênh:** 4 kênh đầu vào analog (single-ended) hoặc 2 kênh vi sai (differential)
@@ -14,7 +14,7 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 - **Chân ngắt (ALERT):** Kích hoạt khi giá trị ADC vượt ngưỡng
 
 
-## ADS1115 Pinout
+## 3.ADS1115 Pinout
 
 | Pin | Tên        | Loại       | Mô tả                                     |
 |-----|------------|------------|-------------------------------------------|
@@ -30,14 +30,13 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 | 10  | AIN3       | Analog In  | Kênh đầu vào analog 3                     |
 
 
-## Tải & Cài đặt:
+## 4.Tải & Cài đặt:
 
-## Hướng dẫn sử dụng:
-## Mô tả các hàm:
-### File ads_driver
+## 5.Hướng dẫn sử dụng:
+## 6.Mô tả các hàm:
 
-## Sử dụng Example
-### Tải và biên dịch Example
+## 7.Sử dụng Example
+### 7.1.Tải và biên dịch Example
 
 
 
