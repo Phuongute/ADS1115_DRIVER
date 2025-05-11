@@ -51,6 +51,7 @@ i2cdetect -y 1
 
 ## 4.Tải & Cài đặt:
 Để sử dụng được Driver trên, bạn phải có sẵn raspberry-kernel-header có phiên bản theo mục yêu cầu hệ thống
+
 4.1. Tải driver:
 ```
 git clone https://github.com/Phuongute/HTN.git
@@ -61,7 +62,7 @@ Sau khi cài đặt driver, bạn cần đưa file .dtbo vào thư mục overlay
 sudo dtc -@ -I dts -O dtb -o ads1115-overlay.dtbo ads1115-overlay.dts # Biên dịch thành file dtbo trước rồi thêm vào overlay
 sudo cp ads1115-overlay.dtbo /boot/overlays/
 ```
-4.3. Sau đó vào /boot/config.txt để thêm cho kernel biết sẽ build drivẻ cùng kúc boot
+4.3. Sau đó vào /boot/config.txt để thêm cho kernel biết sẽ build driver cùng kúc boot
 ```
 sudo nano /boot/config.txt
 dtoverlay=ads1115-overlay #Thêm dòng này vào cuối file
