@@ -13,10 +13,6 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 3. [ADS1115 Pinout](#3ads1115-pinout)
 
 4. [Tải & Cài đặt](#4tải--cài-đặt)  
-   - [Tải driver](#41-tải-driver)  
-   - [Thêm driver vào device tree](#42-thêm-driver-vào-device-tree)  
-   - [Cấu hình /boot/config.txt](#43-sau-đó-vào-bootconfigtxt-để-thêm-cho-kernel-biết-sẽ-build-driver-cùng-kúc-boot)  
-   - [Biên dịch & cài đặt driver](#44-cách-biên-dịch-và-cài-đặt-driver)
 
 5. [Hướng dẫn sử dụng](#5hướng-dẫn-sử-dụng)
 
