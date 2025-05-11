@@ -84,6 +84,7 @@ Repo này chứa 2 chương trình chạy ở user-space để test chức năng
 |--------------------------|----------------------------------------------------------------------|
 | `ads1115_read_adc.c`     | Đọc giá trị ADC liên tục từ kênh AIN0 (có thể chỉnh sang kênh khác). |
 | `ads1115_alert_monitor.c`| Thiết lập ngưỡng ALERT, đọc trạng thái chân ALERT qua GPIO17.        |
+
 1/ads1115_read_adc.c
 ```
 #include <stdio.h>
