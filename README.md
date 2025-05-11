@@ -58,21 +58,19 @@ git clone https://github.com/Phuongute/HTN.git
 4.2. Thêm driver vào device tree:
 Sau khi cài đặt driver, bạn cần đưa file .dtbo vào thư mục overlay để kernel có thể tải đúng thiết bị.
 ```
+sudo dtc -@ -I dts -O dtb -o ads1115-overlay.dtbo ads1115-overlay.dts # Biên dịch thành file dtbo trước rồi thêm vào overlay
 sudo cp ads1115-overlay.dtbo /boot/overlays/
 ```
 4.3. Sau đó vào /boot/config.txt để thêm cho kernel biết sẽ build drivẻ cùng kúc boot
 ```
 sudo nano /boot/config.txt
-```
-Thêm dòng này vào cuối file
-```
-dtoverlay=ads1115-overlay
+dtoverlay=ads1115-overlay #Thêm dòng này vào cuối file
 ```
 Sau đó khởi động lại Raspberry
 ```
 sudo reboot
 ```
-4.4. Cách biên dịch và cài đặt drivẻ
+4.4. Cách biên dịch và cài đặt driver
 ```
 cd HTN/Driver_code
 make
