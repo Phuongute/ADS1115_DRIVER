@@ -5,8 +5,9 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 Để sử dụng driver ADS1115 này, hệ thống cần đảm bảo các yêu cầu sau:
 
 Phần cứng: 
-Sử dụng raspberrypi (ưu tiên sử dụng raspberry pi 3b)
+Raspberry Pi (ưu tiên Raspberry Pi 3B).
 Module ADS1115 (I2C ADC 16-bit 4 kênh từ Texas Instruments).
+Kết nối I2C hoạt động đúng (SCL/SDA đến đúng chân trên Raspberry Pi).
 
 Phần mềm:
 Cần đảm bảo Gói kernel headers phù hợp với phiên bản kernel này: 5.10.92-v7+
@@ -47,7 +48,6 @@ i2cdetect -y 1
 | 8   | AIN1       | Analog In  | Kênh đầu vào analog 1                     |
 | 9   | AIN2       | Analog In  | Kênh đầu vào analog 2                     |
 | 10  | AIN3       | Analog In  | Kênh đầu vào analog 3                     |
-
 
 ## 4.Tải & Cài đặt:
 Để sử dụng được Driver trên, bạn phải có sẵn raspberry-kernel-header có phiên bản theo mục yêu cầu hệ thống
