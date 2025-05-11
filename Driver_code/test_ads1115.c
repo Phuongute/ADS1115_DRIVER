@@ -12,6 +12,7 @@
 #define ADS1115_IOCTL_SET_LOTHRESH _IOW(ADS1115_IOCTL_MAGIC, 2, int)
 #define ADS1115_IOCTL_SET_HITHRESH _IOW(ADS1115_IOCTL_MAGIC, 3, int)
 #define ADS1115_IOCTL_READ_ADC _IOR(ADS1115_IOCTL_MAGIC, 4, int)
+#define ADS1115_IOCTL_SET_CHANNEL _IOW(ADS1115_IOCTL_MAGIC, 5, int)
 
 // IOCTL commands for GPIO
 #define GPIO_MAGIC 'G'
@@ -19,6 +20,17 @@
 #define GPIO_GET_PIN _IOR(GPIO_MAGIC, 1, int)
 #define GPIO_RESET_PIN _IOW(GPIO_MAGIC, 2, int)
 
+// Differential input modes
+#define ADS1115_MUX_0_1    0  // AIN0 - AIN1
+#define ADS1115_MUX_0_3    1  // AIN0 - AIN3
+#define ADS1115_MUX_1_3    2  // AIN1 - AIN3
+#define ADS1115_MUX_2_3    3  // AIN2 - AIN3
+
+// Single-ended input modes (AINx vs GND)
+#define ADS1115_MUX_0_GND  4  // AIN0 - GND
+#define ADS1115_MUX_1_GND  5  // AIN1 - GND
+#define ADS1115_MUX_2_GND  6  // AIN2 - GND
+#define ADS1115_MUX_3_GND  7  // AIN3 - GND
 
 static inline uint16_t adsConfig(uint8_t mux, uint8_t pga, uint8_t mode,uint8_t dr,
                                  uint8_t c_mode,uint8_t pol, uint8_t lat, uint8_t que)
@@ -33,7 +45,7 @@ return (1 << 15) |                  //   [15] OS
         ((lat & 0x01) << 2)    |    //    [2] COMP_LAT
         (que & 0x03);               //  [1:0] COMP_QUE
 }
-int main() {
+int main(void) {
     int ads_fd;
     int fd;
     int adc_val;
@@ -70,8 +82,15 @@ int main() {
         return errno;
     }
 
-
     while(1){
+    // Set channel
+    if (ioctl(ads_fd, ADS1115_IOCTL_SET_CHANNEL, ADS1115_MUX_0_GND) < 0) {
+        perror("Failed to read ADC data");
+        close(ads_fd);
+        return errno;
+    }
+    usleep(62500);  // Data rate: 16sps
+
     // Read ADC data
     if (ioctl(ads_fd, ADS1115_IOCTL_READ_ADC, &adc_val) < 0) {
         perror("Failed to read ADC data");
@@ -80,7 +99,7 @@ int main() {
     }
     printf("ADC value = %d\n", adc_val);
     
-    // Get the GPIO pin value
+    // Get the ALERT pin value
     if (ioctl(fd, GPIO_GET_PIN, &value) < 0) {
         perror("Failed to get GPIO pin value...");
         close(fd);
@@ -88,8 +107,9 @@ int main() {
     }
     printf("GPIO %d value: %d\n", alert_pin, value);
     
-    usleep(62500);  // Data rate: 16sps
     }
+    close(ads_fd);
+    close(fd);
     return 0;
 }
 //sudo dtc -@ -I dts -O dtb -o ads1115-overlay.dtbo ads1115-overlay.dts

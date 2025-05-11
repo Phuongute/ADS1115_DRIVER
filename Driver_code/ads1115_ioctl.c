@@ -10,13 +10,6 @@
 #define CLASS_NAME "ads1115"
 #define DEVICE_NAME "ads1115"
 
-
-#define ADS1115_ADR 0x48    //ADDR nối với Ground
-#define ADS_REG_CONV 0x00
-#define ADS_REG_CONFIG 0x01
-#define ADS_REG_LO_THRESH 0x02
-#define ADS_REG_HI_THRESH 0x03
-
 // IOCTL commands
 #define ADS1115_IOCTL_MAGIC 'a'
 
@@ -24,7 +17,25 @@
 #define ADS1115_IOCTL_SET_LOTHRESH _IOW(ADS1115_IOCTL_MAGIC, 2, int)
 #define ADS1115_IOCTL_SET_HITHRESH _IOW(ADS1115_IOCTL_MAGIC, 3, int)
 #define ADS1115_IOCTL_READ_ADC _IOR(ADS1115_IOCTL_MAGIC, 4, int)
+#define ADS1115_IOCTL_SET_CHANNEL _IOW(ADS1115_IOCTL_MAGIC, 5, int)
 
+#define ADS1115_ADR 0x48    //ADDR nối với Ground
+#define ADS_REG_CONV 0x00
+#define ADS_REG_CONFIG 0x01
+#define ADS_REG_LO_THRESH 0x02
+#define ADS_REG_HI_THRESH 0x03
+
+// Differential input modes
+#define ADS1115_MUX_0_1    0  // AIN0 - AIN1
+#define ADS1115_MUX_0_3    1  // AIN0 - AIN3
+#define ADS1115_MUX_1_3    2  // AIN1 - AIN3
+#define ADS1115_MUX_2_3    3  // AIN2 - AIN3
+
+// Single-ended input modes (AINx vs GND)
+#define ADS1115_MUX_0_GND  4  // AIN0 - GND
+#define ADS1115_MUX_1_GND  5  // AIN1 - GND
+#define ADS1115_MUX_2_GND  6  // AIN2 - GND
+#define ADS1115_MUX_3_GND  7  // AIN3 - GND
 
 static struct i2c_client *ads1115_client;
 static struct class* ads1115_class = NULL;
@@ -62,17 +73,34 @@ static int ads1115_set_hiThresh(struct i2c_client *client,u16 hiThresh){
 static int ads1115_read_adc(struct i2c_client *client)
 {
     int ret;
-    int adcVal;
 
     ret = i2c_smbus_read_word_data(client, ADS_REG_CONV);
     if (ret < 0) {
         printk("ADS1115: Failed to read ADC value: %d\n", ret);
         return ret;
     }
-    adcVal = be16_to_cpu(ret);
-    return adcVal;
+    return be16_to_cpu(ret);
 }
+int ads1115_set_channel(struct i2c_client *client, u8 channel)
+{
+    int ret;
+    u16 config;
+    // đọc lại config
+    ret = i2c_smbus_read_word_data(client, ADS_REG_CONFIG);
+    if (ret < 0)
+        return ret;
 
+    config = be16_to_cpu((u16)ret);
+
+    // Điều chỉnh MUX
+    config &= ~(0x07 << 12);
+    config |= (channel & 0x07) << 12;
+
+    // Bắt đầu chuyển đổi
+    config |= (1 << 15); 
+
+    return i2c_smbus_write_word_data(client, ADS_REG_CONFIG, cpu_to_be16(config));
+}
 static long ads1115_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
     int data;
@@ -83,18 +111,28 @@ static long ads1115_ioctl(struct file *file, unsigned int cmd, unsigned long arg
         }
         return ads1115_set_config(ads1115_client,(u16)data);
         break;
+
         case ADS1115_IOCTL_SET_LOTHRESH:
         if (copy_from_user(&data, (int __user *)arg, sizeof(data))) {
             return -EFAULT;
         }
         return ads1115_set_loThresh(ads1115_client,(u16)data);
         break;
+
         case ADS1115_IOCTL_SET_HITHRESH:
         if (copy_from_user(&data, (int __user *)arg, sizeof(data))) {
             return -EFAULT;
         }
         return ads1115_set_hiThresh(ads1115_client,(u16)data);
         break;
+
+        case ADS1115_IOCTL_SET_CHANNEL:
+        if (copy_from_user(&data, (int __user *)arg, sizeof(data))) {
+            return -EFAULT;
+        }
+        return ads1115_set_channel(ads1115_client,(u16)data);
+        break;
+
         case ADS1115_IOCTL_READ_ADC:
             data = ads1115_read_adc(ads1115_client);
             if (copy_to_user((int __user *)arg, &data, sizeof(data)))
