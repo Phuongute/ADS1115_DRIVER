@@ -2,7 +2,24 @@
 Driver này cung cấp giao tiếp với ADS1115, một bộ chuyển đổi ADC 16-bit 4 kênh từ Texas Instruments, thông qua I2C interface trên nền tảng Linux.
 Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để người dùng tương tác thông qua các lệnh ioctl() cho cấu hình, chọn kênh ADC, đọc giá trị, và thiết lập ngưỡng cảnh báo.
 ## 1.Yêu cầu hệ thống
-
+Để sử dụng driver ADS1115 này, hệ thống cần đảm bảo các yêu cầu sau:
+Phần cứng: 
+Sử dụng raspberrypi (ưu tiên sử dụng raspberry pi 3b)
+Module ADS1115 (I2C ADC 16-bit 4 kênh từ Texas Instruments).
+Phần mềm:
+Cần đảm bảo Gói kernel headers phù hợp với phiên bản kernel này: 5.10.92-v7+
+Trước khi sử dụng ADS1115, giao tiếp I2C phải được bật:
+```
+sudo raspi-config
+# Vào mục "Interfacing Options" → chọn "I2C" → chọn "Enable"
+sudo reboot
+```
+Kiểm tra thiết bị I2C đã kết nối
+Đảm bảo module ADS1115 được nhận diện trên bus I2C (thường là /dev/i2c-1):
+```
+sudo apt install -y i2c-tools
+i2cdetect -y 1
+```
 ## 2.Thông số kỹ thuật (Specifications)
 
 - **Độ phân giải:** 16-bit (±32768 mức)
