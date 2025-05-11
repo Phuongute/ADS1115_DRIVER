@@ -1,29 +1,13 @@
-# ADS1115 Kernel Module Driver (I2C + IOCTL)
-## Mô tả
-Đây là driver kernel dạng character device dành cho module **ADS1115** (I2C ADC 16-bit của Texas Instruments).  
-Driver này hỗ trợ giao tiếp với thiết bị thông qua **IOCTL**, cho phép cấu hình các thanh ghi, đọc giá trị ADC, và chọn kênh đọc thông qua file `/dev/ads1115`.
----
-## Yêu cầu hệ thống
-- Linux Kernel 5.x – 6.x (đã test với 6.10 / 6.12)
-- Module `i2c-dev` được bật
-- Board có I2C (ví dụ Raspberry Pi, BeagleBone, hoặc custom embedded)
----
-## Cấu trúc file
-- `ioctl.c`: source code kernel module
-- `Makefile`: để biên dịch module
-- `test_ads1115.c`: chương trình userspace ví dụ để giao tiếp
----
-## Build
-```bash
-make
-#Load / Unload driver
-#Tải driver vào kernel: sudo insmod ads1115.ko
-#Kiểm tra:
-dmesg | grep ads1115
-ls /dev/ads1115
-#Gỡ driver:
-sudo rmmod ads1115
+# i2c1602
 
+A Raspberry Pi C library to write LCD 16x2 with I2C using WiringPi
 
+This library is based mainly on [Lewis Loflin's code](https://www.example.com).  
+It uses wiringPi I2C to interface with an I2C 16x2 LCD, which has a  
+I2C converter module attached in the back.
 
+## To clone and install this library:
 
+Make sure to have wiringPi installed.  
+**RaspbianOS has wiringPi pre-installed by default.**  
+Check by typing `gpio -v` in terminal. If there is a version then wiringPi is installed.
