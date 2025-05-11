@@ -31,14 +31,16 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 
 
 ## 4.Tải & Cài đặt:
-
-Tải và biên dịch driver:
+Để sử dụng được Driver trên, bạn phải có sẵn raspberry-kernel-header có phiên bản theo mục yêu cầu hệ thống
+4.1. Tải và biên dịch driver:
 ```
 git clone https://github.com/Phuongute/HTN.git
 cd HTN/Driver_code
 make
 sudo make install
 ```
+4.2. Thêm device tree overlay:
+Sau khi cài đặt driver, bạn cần đưa file .dtbo vào thư mục overlay để kernel có thể tải đúng thiết bị.
 
 ## 5.Hướng dẫn sử dụng:
 
