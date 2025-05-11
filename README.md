@@ -63,7 +63,7 @@ gcc test_ads1115_1.c ads1115_Driver.c ads1115_ioctl.c gpio_driver.c -lwiringPi -
 
 ## 6.Mô tả các hàm:
 
-## 7.Sử dụng Example
+## 7.Example
 # Test Driver ADS1115 Trên Raspberry Pi 3B
 
 Repo này chứa 2 chương trình chạy ở user-space để test chức năng đọc ADC và cảnh báo ALERT từ IC ADS1115, dùng Raspberry Pi 3B.
@@ -75,19 +75,16 @@ Repo này chứa 2 chương trình chạy ở user-space để test chức năng
 | `ads1115_read_adc.c`     | Đọc giá trị ADC liên tục từ kênh AIN0 (có thể chỉnh sang kênh khác). |
 | `ads1115_alert_monitor.c`| Thiết lập ngưỡng ALERT, đọc trạng thái chân ALERT qua GPIO17.        |
 
-## Cách sử dụng Terminal
-File 1: Cách chọn channel để đọc
+
+
+### 7.1.Tải và biên dịch Example
 
 ## Cách biên Dịch trên Terminal
-gcc ads1115_read_adc.c -o ads1115_read_adc
+Trong thư mục Example, có các chương trình mẫu mà bạn có thể biên dịch và chạy. Sử dụng câu lệnh
 gcc ads1115_alert_monitor.c -o ads1115_alert_monitor
 ## Cách chạy trên Terminal
 sudo ./ads1115_read_adc
 sudo ./ads1115_alert_monitor
-
-### 7.1.Tải và biên dịch Example
-
-
 
 
 
