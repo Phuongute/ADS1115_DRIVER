@@ -36,25 +36,29 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 Kiểm tra bằng lệnh sau:
 ```
 gpio -v
+```
 Nếu chưa có, cài đặt:
 ```
 sudo apt update
 sudo apt install wiringpi
+```
 Tải và biên dịch driver:
 ```
 git clone https://github.com/Phuongute/HTN.git
 cd HTN/Driver_code
 make
 sudo make install
+```
 Sử dụng trong chương trình của bạn
 Thêm header:
 ```
 #include <ads1115_ioctl.h>
 #include <ads1115_Driver.h>
+```
 Biên dịch chương trình:
 ```
 gcc test_ads1115_1.c ads1115_Driver.c ads1115_ioctl.c gpio_driver.c -lwiringPi -o run
-
+```
 ## 5.Hướng dẫn sử dụng:
 
 ## 6.Mô tả các hàm:
