@@ -41,6 +41,14 @@ sudo make install
 ```
 4.2. Thêm device tree overlay:
 Sau khi cài đặt driver, bạn cần đưa file .dtbo vào thư mục overlay để kernel có thể tải đúng thiết bị.
+```
+sudo cp ads1115-overlay.dtbo /boot/overlays/
+```
+Sau đó vào /boot/config.txt để ...
+```
+sudo nano /boot/config.txt
+sudo reboot
+```
 
 ## 5.Hướng dẫn sử dụng:
 
