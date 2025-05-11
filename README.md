@@ -1,36 +1,30 @@
 # DRIVER ADS1115
 Driver này cung cấp giao tiếp với ADS1115, một bộ chuyển đổi ADC 16-bit 4 kênh từ Texas Instruments, thông qua I2C interface trên nền tảng Linux.
 Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để người dùng tương tác thông qua các lệnh ioctl() cho cấu hình, chọn kênh ADC, đọc giá trị, và thiết lập ngưỡng cảnh báo.
-Mục lục
-Yêu cầu hệ thống
 
-Phần cứng
+## Mục lục
 
-Phần mềm
+1. [Yêu cầu hệ thống](#1yêu-cầu-hệ-thống)  
+   - [Phần cứng](#phần-cứng)  
+   - [Phần mềm](#phần-mềm)  
 
-Thông số kỹ thuật (Specifications)
+2. [Thông số kỹ thuật (Specifications)](#2thông-số-kỹ-thuật-specifications)
 
-ADS1115 Pinout
+3. [ADS1115 Pinout](#3ads1115-pinout)
 
-Tải & Cài đặt
+4. [Tải & Cài đặt](#4tải--cài-đặt)  
+   - [Tải driver](#41-tải-driver)  
+   - [Thêm driver vào device tree](#42-thêm-driver-vào-device-tree)  
+   - [Cấu hình /boot/config.txt](#43-sau-đó-vào-bootconfigtxt-để-thêm-cho-kernel-biết-sẽ-build-driver-cùng-kúc-boot)  
+   - [Biên dịch & cài đặt driver](#44-cách-biên-dịch-và-cài-đặt-driver)
 
-Tải driver
+5. [Hướng dẫn sử dụng](#5hướng-dẫn-sử-dụng)
 
-Thêm driver vào device tree
+6. [Mô tả các hàm](#6mô-tả-các-hàm)
 
-Cấu hình /boot/config.txt
-
-Cài đặt driver
-
-Hướng dẫn sử dụng
-
-Mô tả các hàm
-
-Example - Test Driver ADS1115 Trên Raspberry Pi 3B
-
-Cách chọn channel
-
-Biên dịch và chạy Example
+7. [Example - Test Driver ADS1115 Trên Raspberry Pi 3B](#7example---test-driver-ads1115-trên-raspberry-pi-3b)  
+   - [Hướng dẫn cách chọn channel](#71hướng-dẫn-cách-chọn-channel)  
+   - [Cách biên dịch và chạy Example](#72cách-biên-dịch-và-chạy-example)
 
 
 ## 1.Yêu cầu hệ thống
