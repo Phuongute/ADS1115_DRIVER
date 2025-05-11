@@ -86,12 +86,14 @@ Repo này chứa 2 chương trình chạy ở user-space để test chức năng
 | `ads1115_alert_monitor.c`| Thiết lập ngưỡng ALERT, đọc trạng thái chân ALERT qua GPIO17.        |
 
 ### 7.1.Hướng dẫn cách chọn channel
+```
 // Single-ended input modes (AINx vs GND)
 #define ADS1115_MUX_0_GND  4  // AIN0 - GND
 #define ADS1115_MUX_1_GND  5  // AIN1 - GND
 #define ADS1115_MUX_2_GND  6  // AIN2 - GND
 #define ADS1115_MUX_3_GND  7  // AIN3 - GND
 int16_t channel = ADS1115_MUX_0_GND;
+```
 Thay biến channel bằng 1 trong 4 define trên để chọn kênh tương ứng.
 
 ### 7.2.Cách biên dịch và chạy Example
