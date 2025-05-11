@@ -1,6 +1,38 @@
 # DRIVER ADS1115
 Driver này cung cấp giao tiếp với ADS1115, một bộ chuyển đổi ADC 16-bit 4 kênh từ Texas Instruments, thông qua I2C interface trên nền tảng Linux.
 Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để người dùng tương tác thông qua các lệnh ioctl() cho cấu hình, chọn kênh ADC, đọc giá trị, và thiết lập ngưỡng cảnh báo.
+Mục lục
+Yêu cầu hệ thống
+
+Phần cứng
+
+Phần mềm
+
+Thông số kỹ thuật (Specifications)
+
+ADS1115 Pinout
+
+Tải & Cài đặt
+
+Tải driver
+
+Thêm driver vào device tree
+
+Cấu hình /boot/config.txt
+
+Cài đặt driver
+
+Hướng dẫn sử dụng
+
+Mô tả các hàm
+
+Example - Test Driver ADS1115 Trên Raspberry Pi 3B
+
+Cách chọn channel
+
+Biên dịch và chạy Example
+
+
 ## 1.Yêu cầu hệ thống
 Để sử dụng driver ADS1115 này, hệ thống cần đảm bảo các yêu cầu sau:
 
