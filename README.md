@@ -57,7 +57,7 @@ i2cdetect -y 1
 git clone https://github.com/Phuongute/HTN.git
 ```
 4.2. Thêm driver vào device tree:
-Sau khi cài đặt driver, bạn cần đưa file .dtbo vào thư mục overlay để kernel có thể tải đúng thiết bị.
+Sau khi cài đặt driver, bạn cần đưa file .dtbo (trong thư mục Bin) vào thư mục overlay để kernel có thể tải đúng thiết bị.
 ```
 sudo dtc -@ -I dts -O dtb -o ads1115-overlay.dtbo ads1115-overlay.dts # Biên dịch thành file dtbo trước rồi thêm vào overlay
 sudo cp ads1115-overlay.dtbo /boot/overlays/
