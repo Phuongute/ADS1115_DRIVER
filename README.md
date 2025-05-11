@@ -82,7 +82,6 @@ Repo này chứa 2 chương trình chạy ở user-space để test chức năng
 ## Cách biên Dịch trên Terminal
 Trong thư mục Example, có các chương trình mẫu mà bạn có thể biên dịch và chạy. Sử dụng câu lệnh
 gcc ads1115_alert_monitor.c -o ads1115_alert_monitor
-## Cách chạy trên Terminal
 sudo ./ads1115_read_adc
 sudo ./ads1115_alert_monitor
 
