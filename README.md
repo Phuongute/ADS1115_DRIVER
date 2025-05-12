@@ -36,7 +36,7 @@ Cần đảm bảo Gói kernel headers phù hợp với phiên bản kernel này
 Trước khi sử dụng ADS1115, giao tiếp I2C phải được bật:
 ```
 sudo raspi-config
-# Vào mục "Interfacing Options" → chọn "I2C" → chọn "Enable"
+Vào mục "Interfacing Options" → chọn "I2C" → chọn "Enable"
 sudo reboot
 ```
 Kiểm tra thiết bị I2C đã kết nối
@@ -131,11 +131,10 @@ ADS1115 hỗ trợ tối đa **4 địa chỉ I2C khác nhau**, cho phép kết 
 | `ads1115_set_channel(struct i2c_client *client, u16 channel)`   | Đọc lại thanh ghi cấu hình, thay đổi giá trị MUX để chọn kênh đầu vào (AINx), sau đó kích hoạt chuyển đổi. Dùng ioctl `ADS1115_IOCTL_SET_CHANNEL`.                                                                                                                                                                                                   |
 | `ads1115_ioctl(...)`                                            | Xử lý các lệnh ioctl từ chương trình không gian người dùng: <br>– `ADS1115_IOCTL_CONFIG`: Cấu hình ADC.<br>– `ADS1115_IOCTL_SET_LOTHRESH`: Thiết lập ngưỡng thấp.<br>– `ADS1115_IOCTL_SET_HITHRESH`: Thiết lập ngưỡng cao.<br>– `ADS1115_IOCTL_SET_CHANNEL`: Chọn kênh ADC.<br>– `ADS1115_IOCTL_READ_ADC`: Đọc giá trị ADC và trả về cho user space. |
 
-## 6.Example
-# Test Driver ADS1115 Trên Raspberry Pi 3B
-
+## 6.Examples
+Test Driver ADS1115 Trên Raspberry Pi 3B
 Repo này chứa 2 chương trình chạy ở user-space để test chức năng đọc ADC và cảnh báo ALERT từ IC ADS1115, dùng Raspberry Pi 3B.
-
+2 chương trình này được lưu ở: https://github.com/Phuongute/HTN/tree/main/Example
 ## File Chức Năng
 
 | Tên File                 | Mô Tả                                                                 |
