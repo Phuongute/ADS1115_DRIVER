@@ -14,13 +14,11 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 
 4. [Tải & Cài đặt](#4tải--cài-đặt)  
 
-5. [Hướng dẫn sử dụng](#5hướng-dẫn-sử-dụng)
+5. [Mô tả các hàm](#5mô-tả-các-hàm)
 
-6. [Mô tả các hàm](#6mô-tả-các-hàm)
-
-7. [Example - Test Driver ADS1115 Trên Raspberry Pi 3B](#7example---test-driver-ads1115-trên-raspberry-pi-3b)  
-   - [Hướng dẫn cách chọn channel](#71hướng-dẫn-cách-chọn-channel)  
-   - [Cách biên dịch và chạy Example](#72cách-biên-dịch-và-chạy-example)
+6. [Example - Test Driver ADS1115 Trên Raspberry Pi 3B](#6example---test-driver-ads1115-trên-raspberry-pi-3b)  
+   - [6.1. Hướng dẫn cách chọn channel](#61hướng-dẫn-cách-chọn-channel)  
+   - [6.2. Cách biên dịch và chạy Example](#62cách-biên-dịch-và-chạy-example)
 
 
 ## 1.Yêu cầu hệ thống
@@ -100,9 +98,7 @@ make
 sudo make install
 ```
 
-## 5.Hướng dẫn sử dụng:
-
-## 6.Mô tả các hàm:
+## 5.Mô tả các hàm:
 | Hàm                                                             | Mô tả                                                                                                                                                                                                                                                                                                                                                |
 | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ads1115_set_config(struct i2c_client *client, u16 config)`     | Ghi cấu hình (register 0x01) vào ADS1115. Dữ liệu được truyền từ user space thông qua ioctl `ADS1115_IOCTL_CONFIG`.                                                                                                                                                                                                                                  |
@@ -112,7 +108,7 @@ sudo make install
 | `ads1115_set_channel(struct i2c_client *client, u16 channel)`   | Đọc lại thanh ghi cấu hình, thay đổi giá trị MUX để chọn kênh đầu vào (AINx), sau đó kích hoạt chuyển đổi. Dùng ioctl `ADS1115_IOCTL_SET_CHANNEL`.                                                                                                                                                                                                   |
 | `ads1115_ioctl(...)`                                            | Xử lý các lệnh ioctl từ chương trình không gian người dùng: <br>– `ADS1115_IOCTL_CONFIG`: Cấu hình ADC.<br>– `ADS1115_IOCTL_SET_LOTHRESH`: Thiết lập ngưỡng thấp.<br>– `ADS1115_IOCTL_SET_HITHRESH`: Thiết lập ngưỡng cao.<br>– `ADS1115_IOCTL_SET_CHANNEL`: Chọn kênh ADC.<br>– `ADS1115_IOCTL_READ_ADC`: Đọc giá trị ADC và trả về cho user space. |
 
-## 7.Example
+## 6.Example
 # Test Driver ADS1115 Trên Raspberry Pi 3B
 
 Repo này chứa 2 chương trình chạy ở user-space để test chức năng đọc ADC và cảnh báo ALERT từ IC ADS1115, dùng Raspberry Pi 3B.
@@ -124,7 +120,7 @@ Repo này chứa 2 chương trình chạy ở user-space để test chức năng
 | `ads1115_read_adc.c`     | Đọc giá trị ADC liên tục từ kênh AIN0 (có thể chỉnh sang kênh khác). |
 | `ads1115_alert_monitor.c`| Thiết lập ngưỡng ALERT, đọc trạng thái chân ALERT qua GPIO17.        |
 
-### 7.1.Hướng dẫn cách chọn channel
+### 6.1.Hướng dẫn cách chọn channel
 Ví dụ test file ads1115_read_adc.c
 ```
 // Single-ended input modes (AINx vs GND)
@@ -142,7 +138,7 @@ int16_t hiThresh = (int16_t)(3*32768.0/4.096f);   // Thay 3 bằng giá trị ng
 
 int16_t loThresh = (int16_t)(1*32768.0/4.096f);   // Thay 1 bằng giá trị ngưỡng dưới
 
-### 7.2.Cách biên dịch và chạy Example
+### 6.2.Cách biên dịch và chạy Example
 Trong thư mục Example, có các chương trình mẫu mà bạn có thể biên dịch và chạy. Sử dụng câu lệnh
 ```
 gcc ads1115_alert_monitor.c -o ads1115_alert_monitor 
@@ -151,7 +147,7 @@ sudo ./ads1115_read_adc
 sudo ./ads1115_alert_monitor
 ```
 
-### 7.3. Sơ đồ nối chân để test
+### 6.3. Sơ đồ nối chân để test
 Đối với ads1115_read_adc.c
 ![image](https://github.com/user-attachments/assets/1fb527fa-4744-49d6-8509-baa98257f250)
 
