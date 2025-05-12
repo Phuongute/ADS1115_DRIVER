@@ -6,7 +6,7 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 
 1. [Yêu cầu hệ thống](#1yêu-cầu-hệ-thống)  
 
-2. [Thông số kỹ thuật (Specifications)](#2thông-số-kỹ-thuật-specifications)
+2. [Thông số kỹ thuật](#2thông-số-kỹ-thuật)
 
 3. [ADS1115 Pinout](#3ads1115-pinout)
 
@@ -46,7 +46,7 @@ Kiểm tra thiết bị I2C đã kết nối
 sudo apt install -y i2c-tools
 i2cdetect -y 1
 ```
-## 2.Thông số kỹ thuật (Specifications)
+## 2.Thông số kỹ thuật
 
 - **Độ phân giải:** 16-bit (±32768 mức)
 - **Số kênh:** 4 kênh đầu vào analog (single-ended) hoặc 2 kênh vi sai (differential)
