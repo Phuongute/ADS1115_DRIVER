@@ -177,8 +177,10 @@ sudo ./ads1115_alert_monitor
 Nối chân 17 (BCM tương ứng chân 11 rào cắm) với chân ALRT 
 ## 7. Các file tài liệu tham khảo
 
-Bạn có thể truy cập vào thư mục Docs, đây là nơi chứa các tài liệu tham khảo về các hàm GPIO, I2C ở trong linux kernel. Đồng thời cũng có kèm theo cả file data sheet của ADS1115
+Bạn có thể truy cập vào thư mục Docs, đây là nơi chứa các tài liệu tham khảo về các hàm GPIO, I2C ở trong linux kernel. Đồng thời cũng có kèm theo cả file datasheet của ADS1115
+
 Truy cập tại đây:
+
 '''
 https://github.com/Phuongute/HTN/tree/main/Docs
 '''
