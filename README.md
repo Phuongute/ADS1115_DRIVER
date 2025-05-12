@@ -24,19 +24,18 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 ## 1.Yêu cầu hệ thống
 Để sử dụng driver ADS1115 này, hệ thống cần đảm bảo các yêu cầu sau:
 
-**Phần cứng: 
-Raspberry Pi (ưu tiên Raspberry Pi 3B).
+**Phần cứng:**
+- Raspberry Pi (ưu tiên Raspberry Pi 3B).
 
-Module ADS1115 (I2C ADC 16-bit 4 kênh từ Texas Instruments).
+- Module ADS1115 (I2C ADC 16-bit 4 kênh từ Texas Instruments).
 
-Kết nối I2C hoạt động đúng (SCL/SDA đến đúng chân trên Raspberry Pi).
+- Kết nối I2C hoạt động đúng (SCL/SDA đến đúng chân trên Raspberry Pi).
 
-**Phần mềm:
-Cần đảm bảo Gói kernel headers phù hợp với phiên bản kernel này: 5.10.92-v7+
+**Phần mềm:**
+- Cần đảm bảo Gói kernel headers phù hợp với phiên bản kernel này: 5.10.92-v7+
 
-!! Nếu sử dụng phiên bản khác, cần phải sửa một số thay đổi trong driver mới có thể hoạt động
-
-Trước khi sử dụng ADS1115, giao tiếp I2C phải được bật:
+  **!! Nếu sử dụng phiên bản khác, cần phải sửa một số thay đổi trong driver mới có thể hoạt động**
+- Trước khi sử dụng ADS1115, giao tiếp I2C phải được bật:
 ```
 sudo raspi-config
 Vào mục "Interfacing Options" → chọn "I2C" → chọn "Enable"
