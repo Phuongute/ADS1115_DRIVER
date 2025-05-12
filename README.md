@@ -33,7 +33,9 @@ Kết nối I2C hoạt động đúng (SCL/SDA đến đúng chân trên Raspber
 
 Phần mềm:
 Cần đảm bảo Gói kernel headers phù hợp với phiên bản kernel này: 5.10.92-v7+
+
 !! Nếu sử dụng phiên bản khác, cần phải sửa một số thay đổi trong driver mới có thể hoạt động
+
 Trước khi sử dụng ADS1115, giao tiếp I2C phải được bật:
 ```
 sudo raspi-config
