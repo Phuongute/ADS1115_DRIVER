@@ -70,7 +70,7 @@ int main(void) {
     // Config ADS1115
     uint16_t config = adsConfig(
         0x04, // MUX: AIN0 vs GND
-        0x00, // PGA: ±4.096V
+        0x00, // PGA: ±6.144
         0x01, // MODE: Single-shot
         0x01, // DR: 16 SPS
         0x01, // COMP_MODE: window
@@ -101,7 +101,7 @@ int main(void) {
             close(ads_fd);
             return errno;
         }
-        volt = (float)(adc_val*6.124f/32768.0);
+        volt = (float)(adc_val*6.144/32768.0);
         printf("ADC value = %f, %d\n", volt, adc_val);
     
     }
