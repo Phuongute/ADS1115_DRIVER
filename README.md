@@ -19,7 +19,7 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 6. [Example - Test Driver ADS1115 Trên Raspberry Pi 3B](#6example---test-driver-ads1115-trên-raspberry-pi-3b)  
    - [6.1. Hướng dẫn cách chọn channel](#61hướng-dẫn-cách-chọn-channel)  
    - [6.2. Cách biên dịch và chạy Example](#62cách-biên-dịch-và-chạy-example)
-
+[Thành viên phát triển Driver-ADS1115](#Thành-viên-phát-triển-Driver-ADS1115)  
 
 ## 1.Yêu cầu hệ thống
 Để sử dụng driver ADS1115 này, hệ thống cần đảm bảo các yêu cầu sau:
@@ -82,7 +82,7 @@ Sau khi cài đặt driver, bạn cần đưa file .dtbo (trong thư mục Bin) 
 sudo dtc -@ -I dts -O dtb -o ads1115-overlay.dtbo ads1115-overlay.dts # Biên dịch thành file dtbo trước rồi thêm vào overlay
 sudo cp ads1115-overlay.dtbo /boot/overlays/
 ```
-4.3. Sau đó vào /boot/config.txt để thêm cho kernel biết sẽ build driver cùng kúc boot
+4.3. Sau đó vào /boot/config.txt để thêm cho kernel biết sẽ build driver cùng lúc boot
 ```
 sudo nano /boot/config.txt
 dtoverlay=ads1115-overlay #Thêm dòng này vào cuối file
@@ -97,6 +97,24 @@ cd HTN/Driver_code
 make
 sudo make install
 ```
+4.5. Hướng dẫn thay đổi địa chỉ trên ads1115
+ADS1115 hỗ trợ tối đa **4 địa chỉ I2C khác nhau**, cho phép kết nối nhiều IC ADS1115 trên cùng một bus I2C. Địa chỉ này được xác định thông qua cách kết nối chân **ADDR** của chip:
+
+| Kết nối chân ADDR   | Địa chỉ I2C (hex) |
+|---------------------|-------------------|
+| GND                 | `0x48`            |
+| VDD                 | `0x49`            |
+| SDA                 | `0x4A`            |
+| SCL                 | `0x4B`            |
+
+1. **Chọn địa chỉ mong muốn** (ví dụ: `0x49`).
+2. **Kết nối chân ADDR** đến chân tương ứng:
+   - `GND` nếu dùng địa chỉ `0x48`
+   - `VDD` nếu dùng địa chỉ `0x49`
+   - `SDA` nếu dùng địa chỉ `0x4A`
+   - `SCL` nếu dùng địa chỉ `0x4B`
+3. **Kiểm tra bằng lệnh`i2cdetect`**:
+   i2cdetect -y 1
 
 ## 5.Mô tả các hàm:
 | Hàm                                                             | Mô tả                                                                                                                                                                                                                                                                                                                                                |
@@ -153,6 +171,13 @@ sudo ./ads1115_alert_monitor
 
 Đối với ads1115_alert_monitor.c
 Nối chân 17 (BCM tương ứng chân 11 rào cắm) với chân ALRT 
+
+## Thành viên phát triển Driver ADS1115
+### MAI THANH PHƯƠNG 22146376
+### ĐINH ĐỒNG SƠN 22146390
+### NGUYỄN PHẠM TRUNG QUÂN 22146384
+
+
 
 
 
