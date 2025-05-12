@@ -19,7 +19,7 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 6. [Example - Test Driver ADS1115 Trên Raspberry Pi 3B](#6example---test-driver-ads1115-trên-raspberry-pi-3b)  
    - [6.1. Hướng dẫn cách chọn channel](#61hướng-dẫn-cách-chọn-channel)  
    - [6.2. Cách biên dịch và chạy Example](#62cách-biên-dịch-và-chạy-example)
-7. [Các file tài liệu tham khảo](#7Các-file-tài-liệu-tham-khảo)
+7. [Các file tài liệu tham khảo](#7-Các-file-tài-liệu-tham-khảo)
 
 [Thành viên phát triển Driver-ADS1115](#Thành-viên-phát-triển-Driver-ADS1115)  
 
