@@ -103,7 +103,7 @@ make
 sudo make install
 ```
 
-4.5. Hướng dẫn thay đổi địa chỉ trên ads1115
+## Hướng dẫn thay đổi địa chỉ trên ads1115
 
 
 ADS1115 hỗ trợ tối đa **4 địa chỉ I2C khác nhau**, cho phép kết nối nhiều IC ADS1115 trên cùng một bus I2C. Địa chỉ này được xác định thông qua cách kết nối chân **ADDR** của chip:
@@ -146,7 +146,7 @@ Repo này chứa 2 chương trình chạy ở user-space để test chức năng
 | `ads1115_alert_monitor.c`| Thiết lập ngưỡng ALERT, đọc trạng thái chân ALERT qua GPIO17.        |
 
 ### 6.1.Hướng dẫn cách chọn channel
-Ví dụ test file ads1115_read_adc.c
+**Ví dụ test file ads1115_read_adc.c**
 ```
 // Single-ended input modes (AINx vs GND)
 #define ADS1115_MUX_0_GND  4  // AIN0 - GND
@@ -155,13 +155,14 @@ Ví dụ test file ads1115_read_adc.c
 #define ADS1115_MUX_3_GND  7  // AIN3 - GND
 int16_t channel = ADS1115_MUX_0_GND;
 ```
-Thay biến channel bằng 1 trong 4 define trên để chọn kênh tương ứng.
+- Thay biến channel bằng 1 trong 4 define trên để chọn kênh tương ứng.
 
-Ví dụ test file ads1115_alert_monitor.c
-
+**Ví dụ test file ads1115_alert_monitor.c**
+```
 int16_t hiThresh = (int16_t)(3*32768.0/4.096f);   // Thay 3 bằng giá trị ngưỡng trên
 
 int16_t loThresh = (int16_t)(1*32768.0/4.096f);   // Thay 1 bằng giá trị ngưỡng dưới
+```
 
 ### 6.2.Cách biên dịch và chạy Example
 Trong thư mục Example, có các chương trình mẫu mà bạn có thể biên dịch và chạy. Sử dụng câu lệnh
@@ -173,14 +174,14 @@ sudo ./ads1115_alert_monitor
 ```
 
 ### 6.3. Sơ đồ nối chân để test
-Đối với ads1115_read_adc.c
+**Đối với ads1115_read_adc.c**
 ![image](https://github.com/user-attachments/assets/1fb527fa-4744-49d6-8509-baa98257f250)
 
-Đối với ads1115_alert_monitor.c
-Nối chân 17 (BCM tương ứng chân 11 rào cắm) với chân ALRT 
+**Đối với ads1115_alert_monitor.c**
+- Nối chân 17 (BCM tương ứng chân 11 rào cắm) với chân ALRT 
 ## 7. Các file tài liệu tham khảo
 
-Bạn có thể truy cập vào thư mục Docs, đây là nơi chứa các tài liệu tham khảo về các hàm GPIO, I2C ở trong linux kernel. Đồng thời cũng có kèm theo cả file datasheet của ADS1115
+- Bạn có thể truy cập vào thư mục Docs, đây là nơi chứa các tài liệu tham khảo về các hàm GPIO, I2C ở trong linux kernel. Đồng thời cũng có kèm theo cả file datasheet của ADS1115
 
 Truy cập tại đây:
 
