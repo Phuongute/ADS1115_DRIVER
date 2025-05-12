@@ -46,13 +46,13 @@ return (1 << 15) |                  //   [15] OS
         (que & 0x03);               //  [1:0] COMP_QUE
 }
 int main(void) {
-    int ads_fd;
+    int32_t ads_fd;
     int fd;
     int adc_val;
     int alert_pin = 17; // Example GPIO pin number
     int value;
     float volt;
-    int16_t channel = ADS1115_MUX_0_GND;
+    int16_t channel = ADS1115_MUX_0_1;
     // Open ADS1115 
     ads_fd = open("/dev/ads1115", O_RDWR);
     if (ads_fd < 0) {
@@ -70,7 +70,7 @@ int main(void) {
     // Config ADS1115
     uint16_t config = adsConfig(
         0x04, // MUX: AIN0 vs GND
-        0x01, // PGA: ±4.096V
+        0x00, // PGA: ±4.096V
         0x01, // MODE: Single-shot
         0x01, // DR: 16 SPS
         0x01, // COMP_MODE: window
@@ -78,6 +78,8 @@ int main(void) {
         0x00, // COMP_LAT: non-latching
         0x00  // COMP_QUE: enable comparator
     );
+
+    // SET CONFIG
     if (ioctl(ads_fd, ADS1115_IOCTL_CONFIG, &config) < 0) {
         perror("Failed to config ADS1115");
         close(ads_fd);
@@ -99,12 +101,11 @@ int main(void) {
             close(ads_fd);
             return errno;
         }
-        volt = adc_val*4.096f/32767;
-        printf("ADC value = %f\n", volt);
+        volt = (float)(adc_val*6.124f/32768.0);
+        printf("ADC value = %f, %d\n", volt, adc_val);
     
     }
     close(ads_fd);
     close(fd);
     return 0;
 }
-//sudo dtc -@ -I dts -O dtb -o ads1115-overlay.dtbo ads1115-overlay.dts

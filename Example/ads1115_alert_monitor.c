@@ -32,6 +32,10 @@
 #define ADS1115_MUX_2_GND  6  // AIN2 - GND
 #define ADS1115_MUX_3_GND  7  // AIN3 - GND
 
+// HI/LO THRESH FOR ADS1115
+#define HI_THRESH          3 
+#define LO_THRESH          1
+
 static inline uint16_t adsConfig(uint8_t mux, uint8_t pga, uint8_t mode,uint8_t dr,
                                  uint8_t c_mode,uint8_t pol, uint8_t lat, uint8_t que)
 {
@@ -51,8 +55,8 @@ int main(void) {
     int adc_val;
     int alert_pin = 17; // Example GPIO pin number
     int value;
-    int16_t hiThresh = (int16_t)(3*32768.0/4.096f);
-    int16_t loThresh = (int16_t)(1*32768.0/4.096f);
+    int16_t hiThresh = (int16_t)(HI_THRESH*32768.0/4.096f);
+    int16_t loThresh = (int16_t)(LO_THRESH*32768.0/4.096f);
     float volt;
     // Open ADS1115 
     ads_fd = open("/dev/ads1115", O_RDWR);
@@ -79,6 +83,8 @@ int main(void) {
         0x00, // COMP_LAT: non-latching
         0x00  // COMP_QUE: enable comparator
     );
+
+    // SET CONFIG
     if (ioctl(ads_fd, ADS1115_IOCTL_CONFIG, &config) < 0) {
         perror("Failed to config ADS1115");
         close(ads_fd);
@@ -96,6 +102,12 @@ int main(void) {
         close(ads_fd);
         return errno;
     }
+    // Set the GPIO pin
+    if (ioctl(fd, GPIO_SET_PIN, &alert_pin) < 0) {
+        perror("Failed to set GPIO pin...");
+        close(ads_fd);
+        return errno;
+    }
     while(1){
     ioctl(ads_fd, ADS1115_IOCTL_CONFIG, &config);
     // Read ADC data
@@ -105,14 +117,10 @@ int main(void) {
         return errno;
     }
     printf("ADC value = %d\n", adc_val);
-    // Set the GPIO pin
-    if (ioctl(fd, GPIO_SET_PIN, &alert_pin) < 0) {
-        perror("Failed to set GPIO pin...");
-        close(ads_fd);
-        return errno;
-    }
+
     usleep(10000);
     // Get the ALERT pin value
+    value = alert_pin;  // SET value equal PIN ALRT TO SET IT INPUT 
     if (ioctl(fd, GPIO_GET_PIN, &value) < 0) {
         perror("Failed to get GPIO pin value...");
         close(fd);
@@ -125,4 +133,3 @@ int main(void) {
     close(fd);
     return 0;
 }
-//sudo dtc -@ -I dts -O dtb -o ads1115-overlay.dtbo ads1115-overlay.dts
