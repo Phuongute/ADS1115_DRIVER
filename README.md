@@ -128,6 +128,12 @@ int16_t channel = ADS1115_MUX_0_GND;
 ```
 Thay biến channel bằng 1 trong 4 define trên để chọn kênh tương ứng.
 
+Ví dụ test file ads1115_alert_monitor.c
+
+int16_t hiThresh = (int16_t)(3*32768.0/4.096f);   // Thay 3 bằng giá trị ngưỡng trên
+
+int16_t loThresh = (int16_t)(1*32768.0/4.096f);   // Thay 1 bằng giá trị ngưỡng dưới
+
 ### 7.2.Cách biên dịch và chạy Example
 Trong thư mục Example, có các chương trình mẫu mà bạn có thể biên dịch và chạy. Sử dụng câu lệnh
 ```
@@ -138,9 +144,11 @@ sudo ./ads1115_alert_monitor
 ```
 
 ### 7.3. Sơ đồ nối chân để test
+Đối với ads1115_read_adc.c
 ![image](https://github.com/user-attachments/assets/1fb527fa-4744-49d6-8509-baa98257f250)
 
-
+Đối với ads1115_alert_monitor.c
+Nối chân 17 (BCM tương ứng chân 11 rào cắm) với chân ALRT 
 
 
 
