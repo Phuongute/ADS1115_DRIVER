@@ -19,6 +19,8 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 6. [Example - Test Driver ADS1115 Trên Raspberry Pi 3B](#6example---test-driver-ads1115-trên-raspberry-pi-3b)  
    - [6.1. Hướng dẫn cách chọn channel](#61hướng-dẫn-cách-chọn-channel)  
    - [6.2. Cách biên dịch và chạy Example](#62cách-biên-dịch-và-chạy-example)
+
+
 [Thành viên phát triển Driver-ADS1115](#Thành-viên-phát-triển-Driver-ADS1115)  
 
 ## 1.Yêu cầu hệ thống
@@ -97,7 +99,10 @@ cd HTN/Driver_code
 make
 sudo make install
 ```
+
 4.5. Hướng dẫn thay đổi địa chỉ trên ads1115
+
+
 ADS1115 hỗ trợ tối đa **4 địa chỉ I2C khác nhau**, cho phép kết nối nhiều IC ADS1115 trên cùng một bus I2C. Địa chỉ này được xác định thông qua cách kết nối chân **ADDR** của chip:
 
 | Kết nối chân ADDR   | Địa chỉ I2C (hex) |
@@ -171,6 +176,14 @@ sudo ./ads1115_alert_monitor
 
 Đối với ads1115_alert_monitor.c
 Nối chân 17 (BCM tương ứng chân 11 rào cắm) với chân ALRT 
+## 7. Các file tài liệu tham khảo
+
+Bạn có thể truy cập vào thư mục Docs, đây là nơi chứa các tài liệu tham khảo về các hàm GPIO, I2C ở trong linux kernel. Đồng thời cũng có kèm theo cả file data sheet của ADS1115
+Truy cập tại đây:
+'''
+https://github.com/Phuongute/HTN/tree/main/Docs
+'''
+
 
 ## Thành viên phát triển Driver ADS1115
 ### MAI THANH PHƯƠNG 22146376
