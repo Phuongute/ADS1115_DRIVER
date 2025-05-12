@@ -137,6 +137,10 @@ sudo ./ads1115_read_adc
 sudo ./ads1115_alert_monitor
 ```
 
+### 7.3. Sơ đồ nối chân để test
+![image](https://github.com/user-attachments/assets/1fb527fa-4744-49d6-8509-baa98257f250)
+
+
 
 
 
