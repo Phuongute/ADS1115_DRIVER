@@ -117,10 +117,6 @@ ADS1115 hỗ trợ tối đa **4 địa chỉ I2C khác nhau**, cho phép kết 
 
 1. **Chọn địa chỉ mong muốn** (ví dụ: `0x49`).
 2. **Kết nối chân ADDR** đến chân tương ứng:
-   - `GND` nếu dùng địa chỉ `0x48`
-   - `VDD` nếu dùng địa chỉ `0x49`
-   - `SDA` nếu dùng địa chỉ `0x4A`
-   - `SCL` nếu dùng địa chỉ `0x4B`
 3. **Kiểm tra bằng lệnh`i2cdetect`**:
    i2cdetect -y 1
 
