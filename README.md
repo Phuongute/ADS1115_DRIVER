@@ -74,28 +74,29 @@ i2cdetect -y 1
 | 10  | AIN3       | Analog In  | Kênh đầu vào analog 3                     |
 
 ## 4.Tải & Cài đặt:
-Để sử dụng được Driver trên, bạn phải có sẵn raspberry-kernel-header có phiên bản theo mục yêu cầu hệ thống
 
-4.1. Tải driver:
+**Để sử dụng được Driver trên, bạn phải có sẵn raspberry-kernel-header có phiên bản theo mục yêu cầu hệ thống**
+
+- Tải driver:
 ```
 git clone https://github.com/Phuongute/HTN.git
 ```
-4.2. Thêm driver vào device tree:
+- Thêm driver vào device tree:
 Sau khi cài đặt driver, bạn cần đưa file .dtbo (trong thư mục Bin) vào thư mục overlay để kernel có thể tải đúng thiết bị.
 ```
 sudo dtc -@ -I dts -O dtb -o ads1115-overlay.dtbo ads1115-overlay.dts # Biên dịch thành file dtbo trước rồi thêm vào overlay
 sudo cp ads1115-overlay.dtbo /boot/overlays/
 ```
-4.3. Sau đó vào /boot/config.txt để thêm cho kernel biết sẽ build driver cùng lúc boot
+- Sau đó vào /boot/config.txt để thêm cho kernel biết sẽ build driver cùng lúc boot
 ```
 sudo nano /boot/config.txt
 dtoverlay=ads1115-overlay #Thêm dòng này vào cuối file
 ```
-Sau đó khởi động lại Raspberry
+- Sau đó khởi động lại Raspberry
 ```
 sudo reboot
 ```
-4.4. Cách biên dịch và cài đặt driver
+**Cách biên dịch và cài đặt driver**
 ```
 cd HTN/Driver_code
 make
