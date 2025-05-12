@@ -5,8 +5,6 @@ Nó cung cấp một giao diện thiết bị ký tự (/dev/ads1115) để ngư
 ## Mục lục
 
 1. [Yêu cầu hệ thống](#1yêu-cầu-hệ-thống)  
-   - [Phần cứng](#Phần-cứng)  
-   - [Phần mềm](#Phần-mềm)  
 
 2. [Thông số kỹ thuật (Specifications)](#2thông-số-kỹ-thuật-specifications)
 
